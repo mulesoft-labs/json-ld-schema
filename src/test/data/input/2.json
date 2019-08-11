@@ -1,0 +1,28 @@
+{
+  "@context": {
+    "@base": "http://test.com/",
+    "@vocab": "http://test.com/vocab#",
+    "friend": {
+      "@id": "http://test.com/vocab#friend",
+      "@type": "@id"
+    }
+  },
+  "@graph": [
+    {
+      "@id": "1",
+      "@type": ["Person"],
+      "givenName": "John",
+      "friend": ["2", "3"]
+    },
+    {
+      "@id": "2",
+      "@type": "Person",
+      "friend": ["1"]
+    },
+    {
+      "@id": "3",
+      "@type": "Person",
+      "friend": ["2"]
+    }
+  ]
+}

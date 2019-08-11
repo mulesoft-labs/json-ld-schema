@@ -1,0 +1,30 @@
+{
+  "@context": { "sorg": "http://schema.org/" },
+  "@type": "sorg:Person",
+  "type": "object",
+  "properties": {
+    "sorg:givenName": {
+      "type": "string"
+    },
+    "sorg:gender": {
+      "type": "string",
+      "regex": "male|female"
+    },
+    "sorg:address": {
+      "$ref": "#/definitions/AddressShape"
+    }
+  },
+  "required": [ "sorg:address"],
+  "definitions": {
+    "AddressShape": {
+      "@type": "sorg:PostalAddress",
+      "type": "object",
+      "properties": {
+        "sorg:addressCountry": {
+          "@type": "sorg:Country",
+          "type": "object"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "name": "jsonld-schema",
+  "version": "1.0.0",
+  "description": "Shape schema validator for JSON-LD",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^24.0.17",
+    "jest": "^24.8.0",
+    "ts-jest": "^24.0.2",
+    "typescript": "^3.5.3"
+  },
+  "dependencies": {
+    "@types/ajv": "^1.0.0",
+    "@types/jsonld": "^1.5.0",
+    "@types/node": "^12.7.1",
+    "ajv": "^6.10.2",
+    "json-schema-ref-parser": "^7.1.0",
+    "jsonld": "^1.6.2"
+  }
+}

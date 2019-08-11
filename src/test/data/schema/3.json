@@ -1,0 +1,19 @@
+{
+  "@context": {
+    "v": "http://test.com/vocab#",
+    "v:friend": { "@container": "@set" }
+  },
+  "@type": "v:Person",
+  "type": "object",
+  "properties": {
+    "v:friend": {
+      "type": "array",
+      "items": {
+        "@type": "v:Person",
+        "type": "object"
+      },
+      "minItems": 2
+    }
+  },
+  "required": [ "v:friend"]
+}

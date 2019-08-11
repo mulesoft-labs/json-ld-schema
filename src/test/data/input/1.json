@@ -1,0 +1,17 @@
+{
+  "@context": {
+    "@vocab": "http://schema.org/"
+  },
+  "@id": "http://test.com/1",
+  "@type": ["Person"],
+  "givenName": "John",
+  "familyName": "Doe",
+  "address": {
+    "@id": "http://test.com/2",
+    "@type": "PostalAddress",
+    "postalCode": "NW1 8AZ",
+    "streetAddress": "Ivor Street 84",
+    "addressCountry": "uk",
+    "addressLocality": "London"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "@context": {
+    "sorg": "http://schema.org/"
+  },
+  "@type": "sorg:Person",
+  "type": "object",
+  "properties": {
+    "sorg:givenName": {
+      "type": "string"
+    },
+    "sorg:gender": {
+      "type": "string",
+      "regex": "male|female"
+    }
+  },
+  "required": [ "sorg:name", "sorg:gender"]
+}

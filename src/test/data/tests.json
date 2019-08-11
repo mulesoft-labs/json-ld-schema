@@ -1,0 +1,26 @@
+{
+  "Simple object": {
+    "input": "input/1.json",
+    "schema": "schema/1.json",
+    "validates": false,
+    "totalErrors": 1
+  },
+  "Simple nested object": {
+    "input": "input/1.json",
+    "schema": "schema/2.json",
+    "validates": false,
+    "totalErrors": 1
+  },
+  "Simple nested Array": {
+    "input": "input/2.json",
+    "schema": "schema/3.json",
+    "validates": false,
+    "totalErrors": 2
+  },
+  "Simple nested object with $ref": {
+    "input": "input/1.json",
+    "schema": "schema/4.json",
+    "validates": false,
+    "totalErrors": 1
+  }
+}
