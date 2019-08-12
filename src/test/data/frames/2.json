@@ -1,0 +1,18 @@
+{
+  "@type": [
+    "sorg:Person"
+  ],
+  "sorg:address": {
+    "@type": [
+      "sorg:PostalAddress"
+    ],
+    "sorg:addressCountry": {
+      "@type": [
+        "sorg:Country"
+      ]
+    }
+  },
+  "@context": {
+    "sorg": "http://schema.org/"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "@type": [
+    "v:Person"
+  ],
+  "v:friend": {
+    "@type": [
+      "v:Person"
+    ]
+  },
+  "@context": {
+    "v": "http://test.com/vocab#",
+    "v:friend": {
+      "@container": "@set"
+    }
+  }
+}

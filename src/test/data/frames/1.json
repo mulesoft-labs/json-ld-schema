@@ -1,0 +1,8 @@
+{
+  "@type": [
+    "sorg:Person"
+  ],
+  "@context": {
+    "sorg": "http://schema.org/"
+  }
+}

@@ -1,49 +1,12 @@
 import Ajv from "ajv";
 import * as jsonld from "jsonld"
+import {jsonldSchemaToFrame} from "./schema_parsing";
+
 const $RefParser = require("json-schema-ref-parser");
 
 const ajv = new Ajv({allErrors: true, schemaId: "auto"});
 
 const DEBUG = false;
-
-function extractContext(document: any): any|null {
-    return document["@context"];
-}
-
-function jsonldSchemaToFrame(jsonldschema: any): any {
-    if (Array.isArray(jsonldschema)) {
-        return (jsonldschema as Array<any>).map((e) => jsonldSchemaToFrame(e));
-    } else if (typeof(jsonldschema) !== 'object' || jsonldschema == null) {
-        return null
-    } else {
-        let semType = jsonldschema['@type'];
-        let ctx = extractContext(jsonldschema);
-        let props = jsonldschema['properties'];
-        let items = jsonldschema['items'];
-        let acc: {[p:string]: any} = {};
-        if (semType != null) {
-            acc["@type"] = semType;
-        }
-        if (ctx != null) {
-            acc["@context"] = ctx;
-        }
-        if (items != null) {
-            return jsonldSchemaToFrame(items); // TODO: arrays in items
-        } else if(props != null) {
-            for (var p in props) {
-                let nested = jsonldSchemaToFrame(props[p]);
-                if (nested != null) {
-                    acc[p] = nested;
-                }
-            }
-            return  acc;
-        } else if (semType != null || ctx != null) { // otherwise we would generate an empty map
-            return acc;
-        }
-        // TODO: schema combinators
-        // TODO: $refs
-    }
-}
 
 async function applyFrame(document: any, jsonldSchema: any): Promise<any>  {
     let resolvedJsonldSchema = await $RefParser.dereference(jsonldSchema);
@@ -81,11 +44,6 @@ async function validateSchema(document: any, schema: any): Promise<any> {
     })
 }
 
-/*
-function recontext(document: any, oldContext: any, newContext: any): any {
-    jsonld.
-}
-*/
 export async function validate(document: Document, jsonldSchema: Document) {
     let framed: any = await applyFrame(document, jsonldSchema);
     let nodes: Array<any> = framed["@graph"] || [];
