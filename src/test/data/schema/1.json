@@ -10,7 +10,7 @@
     },
     "sorg:gender": {
       "type": "string",
-      "regex": "male|female"
+      "pattern": "male|female"
     }
   },
   "required": [ "sorg:name", "sorg:gender"]

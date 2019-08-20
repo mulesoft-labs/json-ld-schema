@@ -7,6 +7,6 @@ import {JsonldSchemaFrameParser} from "./schema_parsing/jsonld_schema_frame_pars
  * nodes in the RDF graph as JSON-LD documents to validate.
  * @param jsonldschema
  */
-export function jsonldSchemaToFrame(jsonldschema: any): any {
-    return new JsonldSchemaFrameParser(jsonldschema).parse();
+export async function jsonldSchemaToFrame(jsonldschema: any): Promise<any> {
+    return new JsonldSchemaFrameParser().parse(jsonldschema);
 }

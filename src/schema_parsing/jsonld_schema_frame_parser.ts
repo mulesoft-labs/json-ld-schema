@@ -8,12 +8,12 @@ import {JsonldContext} from "./jsonld_context";
  * Schema parser that generates a JSON-LD frame for the provided JSON-LD Schema
  */
 export class JsonldSchemaFrameParser extends JsonldSchemaParser{
-    parse(): any {
-        let parsed = super.parse();
+    async parse(schema: any): Promise<any> {
+        let parsed = await super.parse(schema);
         if (typeof parsed === "object") {
             delete parsed["@container"]; // we remove the top level @container property, just in case
         }
-        let schemaContext = new JsonldContext(this.jsonldGet(this.schema, "@context", {}));
+        let schemaContext = new JsonldContext(this.jsonldGet(schema, "@context", {}));
         let finalContext = schemaContext.updateContext(this.jsonldGet(parsed, "@context", {}));
         if (this.isProperFrame(finalContext)) {
             parsed["@context"] = finalContext.context;
@@ -21,13 +21,17 @@ export class JsonldSchemaFrameParser extends JsonldSchemaParser{
         return parsed;
     }
 
-    protected parseBoolean(jsonldSchema: boolean, context: JsonldContext): any {
-        if (jsonldSchema) {
-            return {}; // we match any node
-        }
+    protected async parseBoolean(jsonldSchema: boolean, context: JsonldContext): Promise<any> {
+        return new Promise<any>((resolve, rejects) => {
+            if (jsonldSchema) {
+                resolve({}); // we match any node
+            } else {
+                resolve(null);
+            }
+        })
     }
 
-    protected parseObject(jsonldSchema: {}, context: JsonldContext): any {
+    protected async parseObject(jsonldSchema: {}, context: JsonldContext): Promise<any> {
         let nextFrameNode: {[p:string]: any} = {};
         // JSON-LD @type
         this.parseSemType(jsonldSchema, nextFrameNode);
@@ -37,7 +41,7 @@ export class JsonldSchemaFrameParser extends JsonldSchemaParser{
             let props = this.jsonldGet(jsonldSchema, "properties", {});
             for (let property in props) {
                 if (props.hasOwnProperty(property)) {
-                    this.parseProperty(props[property], property, nextFrameNode, context);
+                    await this.parseProperty(props[property], property, nextFrameNode, context);
                 }
             }
         }
@@ -45,7 +49,7 @@ export class JsonldSchemaFrameParser extends JsonldSchemaParser{
         // than properties, we need to keep on adding constraints to select both types of nodes
         let items = this.items(jsonldSchema);
         if (items.length != 0) {
-            this.parseItems(items,nextFrameNode, context);
+            await this.parseItems(items,nextFrameNode, context);
             // let's tell the caller that this object needs to be requested
             // as an array
             nextFrameNode["@container"] = "@set";
@@ -53,7 +57,7 @@ export class JsonldSchemaFrameParser extends JsonldSchemaParser{
         // Now let's check combinations of schemas
         let combinators = this.combinators(jsonldSchema);
         if (combinators.length != 0) {
-            this.parseCombinators(combinators, nextFrameNode, context);
+            await this.parseCombinators(combinators, nextFrameNode, context);
         }
 
         return nextFrameNode;
@@ -66,14 +70,14 @@ export class JsonldSchemaFrameParser extends JsonldSchemaParser{
      * @param nextFrameNode
      * @param context
      */
-    private parseProperty(propertyElement: any, property: string, nextFrameNode: {[p:string]: any}, context: JsonldContext) {
-        let nestedFrame = this.parseSchema(propertyElement, context);
+    private async parseProperty(propertyElement: any, property: string, nextFrameNode: {[p:string]: any}, context: JsonldContext): Promise<any> {
+        let nestedFrame = await this.parseSchema(propertyElement, context);
         let existingFrame = nextFrameNode[property];
         if (!this.isProperFrame(nestedFrame)) {
             return existingFrame;
         }
         if (existingFrame != null) {
-            this.mergeObject(existingFrame, nestedFrame);
+            await this.mergeObject(existingFrame, nestedFrame);
         } else {
             nextFrameNode[property] = nestedFrame;
         }
@@ -114,13 +118,14 @@ export class JsonldSchemaFrameParser extends JsonldSchemaParser{
      * @param nextFrameNode
      * @param context
      */
-    private parseItems(items: any[], nextFrameNode: {}, context: JsonldContext) {
-        items.forEach(item => {
-            let parsed = this.parseSchema(item, context);
+    private async parseItems(items: any[], nextFrameNode: {}, context: JsonldContext): Promise<any> {
+        for (let i=0; i<items.length; i++) {
+            let item = items[i];
+            let parsed = await this.parseSchema(item, context);
             if (this.isProperObject(parsed)) {
-                this.mergeObject(nextFrameNode, parsed);
+                await  this.mergeObject(nextFrameNode, parsed);
             }
-        });
+        }
         return nextFrameNode;
     }
 
@@ -130,22 +135,15 @@ export class JsonldSchemaFrameParser extends JsonldSchemaParser{
      * @param nextFrameNode
      * @param context
      */
-    private parseCombinators(items: any[], nextFrameNode: {}, context: JsonldContext) {
-        items.forEach(item => {
-            let parsed = this.parseSchema(item, context);
+    private async parseCombinators(items: any[], nextFrameNode: {}, context: JsonldContext): Promise<any> {
+        for (let i = 0; i<items.length; i++) {
+            let item = items[i];
+            let parsed = await this.parseSchema(item, context);
             if (this.isProperObject(parsed)) {
-                this.mergeObject(nextFrameNode, parsed);
+                await  this.mergeObject(nextFrameNode, parsed);
             }
-        });
+        }
         return nextFrameNode;
-    }
-
-    /**
-     *
-     * @param jsonldSchema
-     */
-    protected hasProperties(jsonldSchema: any): boolean {
-        return this.jsonldGet(jsonldSchema, "properties") != null;
     }
 
     /**
@@ -200,7 +198,7 @@ export class JsonldSchemaFrameParser extends JsonldSchemaParser{
      * @param existingFrame
      * @param newFrame
      */
-    private mergeObject(existingFrame: {[p:string]: any}, newFrame: any): {[p:string]: any} {
+    private async mergeObject(existingFrame: {[p:string]: any}, newFrame: any): Promise<{[p:string]: any}> {
         if (typeof newFrame !== "object" || newFrame == null) {
             if (Array.isArray(newFrame)) {
                 throw new Error("Cannot merge a JSON object with an Array");

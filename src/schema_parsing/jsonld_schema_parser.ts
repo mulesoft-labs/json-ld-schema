@@ -1,22 +1,19 @@
 /***
- * Common class for all Schema parsers
+ * Base class for all Schema parsers
  */
 import {applyMixins, JsonldHandler} from "../utils";
 import {JsonldContext} from "./jsonld_context";
+const $RefParser = require("json-schema-ref-parser");
 
 export abstract class JsonldSchemaParser {
-    protected readonly schema: any;
-
-    constructor(schema: any) {
-        this.schema = schema;
-    }
 
     /**
      * Triggers the parsing of the provided schema
      */
-    parse(): any {
+    async parse(schema: any): Promise<any> {
+        let resolvedJsonldSchema = await $RefParser.dereference(schema);
         let context = new JsonldContext();
-        return this.parseSchema(this.schema, context)
+        return this.parseSchema(resolvedJsonldSchema, context)
     }
 
     /**
@@ -24,7 +21,7 @@ export abstract class JsonldSchemaParser {
      * @param jsonldSchema
      * @param context
      */
-    protected parseSchema(jsonldSchema: any, context: JsonldContext): any {
+    protected async parseSchema(jsonldSchema: any, context: JsonldContext): Promise<any> {
         if (typeof jsonldSchema === "boolean") {
             return this.parseBoolean(jsonldSchema as boolean, context);
         } else if (this.isProperObject(jsonldSchema)) {
@@ -36,9 +33,17 @@ export abstract class JsonldSchemaParser {
         } else throw new Error("JSON Schemas must be only boolean or objects") // https://json-schema.org/latest/json-schema-core.html#rfc.section.4.3
     }
 
-    protected abstract parseBoolean(jsonldSchema: boolean, context: JsonldContext): any;
+    protected abstract async parseBoolean(jsonldSchema: boolean, context: JsonldContext): Promise<any>;
 
-    protected abstract parseObject(jsonldSchema: Object, context: JsonldContext): any;
+    protected abstract async parseObject(jsonldSchema: Object, context: JsonldContext): Promise<any>;
+
+    /**
+     * Checks if this schema constraint properties of an object
+     * @param jsonldSchema
+     */
+    protected hasProperties(jsonldSchema: any): boolean {
+        return this.jsonldGet(jsonldSchema, "properties") != null;
+    }
 
 }
 export interface JsonldSchemaParser extends JsonldHandler {}

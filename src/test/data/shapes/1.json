@@ -1,0 +1,24 @@
+{
+  "sh:class": "http://schema.org/Person",
+  "sh:property": [
+    {
+      "sh:path": "http://schema.org/givenName",
+      "sh:datatype": "xsd:string"
+    },
+    {
+      "sh:path": "http://schema.org/gender",
+      "sh:datatype": "xsd:string",
+      "sh:pattern": "male|female",
+      "sh:minCount": 1
+    },
+    {
+      "sh:path": "http://schema.org/name",
+      "sh:minCount": 1
+    }
+  ],
+  "@type": "sh:NodeShape",
+  "@context": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  }
+}

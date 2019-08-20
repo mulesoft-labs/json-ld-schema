@@ -32,6 +32,42 @@ export class JsonldHandler {
     isProperObject(jsonldSchema: any): boolean {
         return typeof jsonldSchema === "object" && !Array.isArray(jsonldSchema) && jsonldSchema != null
     }
+
+    isObjectWithProperties(obj: Object): boolean {
+        return this.isProperObject(obj) && Object.keys(obj).length !== 0;
+    }
+
+    deepCopy(obj: {[_:string]:any}): {[_:string]:any} {
+        let copy: {[_:string]:any};
+
+        // Handle the 3 simple types, and null or undefined
+        if (null == obj || "object" != typeof obj) return obj;
+
+        // Handle Date
+        if (obj instanceof Date) {
+            copy = new Date();
+            copy.setTime(obj.getTime());
+            return copy;
+        }
+
+        // Handle Array
+        if (obj instanceof Array) {
+            copy = [];
+            for (var i = 0, len = obj.length; i < len; i++) {
+                copy[i] = this.deepCopy(obj[i]);
+            }
+            return copy;
+        }
+
+        // Handle Object
+        copy = {};
+        for (var attr in obj) {
+            if (obj.hasOwnProperty(attr)) {
+                copy[attr] = this.deepCopy(obj[attr]);
+            }
+        }
+        return copy;
+    }
 }
 
 /**

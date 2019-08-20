@@ -1,0 +1,18 @@
+{
+  "sh:class": "http://test.com/vocab#Person",
+  "sh:property": [
+    {
+      "sh:path": "http://test.com/vocab#friend",
+      "sh:minCount": 2,
+      "sh:node": {
+        "sh:class": "http://test.com/vocab#Person",
+        "@type": "sh:NodeShape"
+      }
+    }
+  ],
+  "@type": "sh:NodeShape",
+  "@context": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  }
+}

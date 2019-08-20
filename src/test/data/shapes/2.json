@@ -1,0 +1,36 @@
+{
+  "sh:class": "http://schema.org/Person",
+  "sh:property": [
+    {
+      "sh:path": "http://schema.org/givenName",
+      "sh:datatype": "xsd:string"
+    },
+    {
+      "sh:path": "http://schema.org/gender",
+      "sh:datatype": "xsd:string",
+      "sh:pattern": "male|female"
+    },
+    {
+      "sh:path": "http://schema.org/address",
+      "sh:node": {
+        "sh:class": "http://schema.org/PostalAddress",
+        "sh:property": [
+          {
+            "sh:path": "http://schema.org/addressCountry",
+            "sh:node": {
+              "sh:class": "http://schema.org/Country",
+              "@type": "sh:NodeShape"
+            }
+          }
+        ],
+        "@type": "sh:NodeShape"
+      },
+      "sh:minCount": 1
+    }
+  ],
+  "@type": "sh:NodeShape",
+  "@context": {
+    "sh": "http://www.w3.org/ns/shacl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  }
+}

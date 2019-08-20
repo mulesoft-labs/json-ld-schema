@@ -8,7 +8,7 @@
     },
     "sorg:gender": {
       "type": "string",
-      "regex": "male|female"
+      "pattern": "male|female"
     },
     "sorg:address": {
       "$ref": "#/definitions/AddressShape"
