@@ -1,18 +1,30 @@
 {
-  "sh:class": "http://schema.org/Person",
+  "sh:class": {
+    "@id": "http://schema.org/Person"
+  },
   "sh:property": [
     {
-      "sh:path": "http://schema.org/givenName",
-      "sh:datatype": "xsd:string"
+      "sh:path": {
+        "@id": "http://schema.org/givenName"
+      },
+      "sh:datatype": {
+        "@id": "xsd:string"
+      }
     },
     {
-      "sh:path": "http://schema.org/gender",
-      "sh:datatype": "xsd:string",
+      "sh:path": {
+        "@id": "http://schema.org/gender"
+      },
+      "sh:datatype": {
+        "@id": "xsd:string"
+      },
       "sh:pattern": "male|female",
       "sh:minCount": 1
     },
     {
-      "sh:path": "http://schema.org/name",
+      "sh:path": {
+        "@id": "http://schema.org/name"
+      },
       "sh:minCount": 1
     }
   ],

@@ -112,7 +112,7 @@ export class JsonldSchemaShaclParser extends JsonldSchemaParser {
 
             // sh:class
             if (jsonldSchema["@type"] != null) {
-                nodeShape["sh:class"] = await context.expand(jsonldSchema["@type"]);
+                nodeShape["sh:class"] = { "@id": await context.expand(jsonldSchema["@type"]) };
             }
 
             // sh:property
@@ -174,7 +174,7 @@ export class JsonldSchemaShaclParser extends JsonldSchemaParser {
             let propertySchema = properties[p];
 
             // sh:path
-            propertyShape["sh:path"] = await context.expand(p);
+            propertyShape["sh:path"] = { "@id": await context.expand(p) };
 
             // sh:node
             const valueShape = await this.parseSchema(propertySchema, context);
@@ -200,7 +200,7 @@ export class JsonldSchemaShaclParser extends JsonldSchemaParser {
             let property = propertyShapes[p];
             if (property == null) { // this can be null because it is in the required array but has no other constraint
                 property = {};
-                property["sh:path"] = await context.expand(p)
+                property["sh:path"] = { "@id": await context.expand(p) };
             }
             if (property["sh:minCount"] == null || property["sh:minCount"] < 1) {
                 property["sh:minCount"] = 1;
@@ -390,7 +390,7 @@ export class JsonldSchemaShaclParser extends JsonldSchemaParser {
         return new Promise<any|null>((resolve, reject) => {
             if (this.isStringValidation(jsonldSchema)) {
                 // sh:datatype
-                let propertyConstraints: {[_:string]: any} = {"sh:datatype": "xsd:string"};
+                let propertyConstraints: {[_:string]: any} = {"sh:datatype": {"@id": "xsd:string"} };
 
                 // let's process the remaining properties
                 for (const p in jsonldSchema) {
