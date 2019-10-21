@@ -1,8 +1,10 @@
-#JSON-LD Schema
+# JSON-LD Schema
 
 Simple schema validation for linked data.
 
-##Why?
+![Diagram](docs/diagram.png)
+
+## Why?
 Schema validation is an important use case in API development but a simple and efficient solution based on the validation of JSON-LD documents does not exist. 
 
 JSON-LD documents can be seen from two points of view: as regular JSON documents following certain conventions or as RDF graphs encoded using JSON syntax.
@@ -15,7 +17,7 @@ Validation mechanisms indeed exist for both ways of looking at the information i
 Taking these two already existing validation mechanisms in consideration, JSON-LD Schema tries to bridge the gap between both standards proposing
 a small [JSON-Schema vocabulary](https://json-schema.org/draft/2019-09/json-schema-core.html#rfc.section.8.1.2) that can be used to write a simple JSON-Schema document that then can be applied with the same validation semantics than an equivalent SHACL validation over the RDF graph encoded in the target JSON-LD document but with the simplicity and runtime performance of a regular JSON Schema.
 
-##Usage
+## Usage
 
 JSON-LD Schema is provided as a typescript library exposing a single function `validate` that accepts a parsed JSON-LD document and JSON-LD Schema:
 
@@ -26,7 +28,7 @@ import * as jsonldSchema from "jsonldSchema";
 let input = JSON.parse(fs.readFileSync("test_data.json").toString());
 let schema = JSON.parse(fs.readFileSync("test_schema.json").toString());
 
-// executs the validation
+// executes the validation
 let res = await jsonldSchema.validate(input, schema);
 
 // we check if the document validates
@@ -41,9 +43,9 @@ if (!res.validates) {
 }
 ```
 
-##How does it work?
+## How does it work?
 
-JSON-LD Schema defines a simple ['semantics' JSON-Schema vocabulary](vocabulary.json) (effectively a JSON-Schema meta-schema) that reuses the official [JSON Schema
+JSON-LD Schema defines a simple ['semantics' JSON-Schema vocabulary](docs/vocabulary.json) (effectively a JSON-Schema meta-schema) that reuses the official [JSON Schema
 for JSON-LD](https://github.com/json-ld/json-ld.org/blob/master/schemas/jsonld-schema.json) to provide definitions for `@context` and `@type` properties. These annotations can be used to provide JSON-LD context for a JSON-Schema document.
 Provided this JSON-LD context, constraints over named 'properties' in a JSON Schema document can be understood as constraints
 over CURIES of JSON-LD documents following the context rules defined in the JSON-LD specification.
