@@ -14,12 +14,12 @@ Validation mechanisms indeed exist for both ways of looking at the information i
 - **SHACL** can be used to validate the RDF graph encoded in the JSON-LD document. SHACL is powerful and expressive but difficult to write and learn, especially for users that do not want to work with JSON-LD as an RDF format. Additionally, the performance of SHACL validators is far from the performance of syntactical JSON-Schema validators
 
 
-Taking these two already existing validation mechanisms in consideration, JSON-LD Schema tries to bridge the gap between both standards proposing
-a small [JSON-Schema vocabulary](https://json-schema.org/draft/2019-09/json-schema-core.html#rfc.section.8.1.2) that can be used to write a simple JSON-Schema document that then can be applied with the same validation semantics than an equivalent SHACL validation over the RDF graph encoded in the target JSON-LD document but with the simplicity and runtime performance of a regular JSON Schema.
+Taking these two already-existing validation mechanisms into consideration, JSON-LD Schema tries to bridge the gap between both standards by proposing
+a small [JSON-Schema vocabulary](https://json-schema.org/draft/2019-09/json-schema-core.html#rfc.section.8.1.2) that can be used to write a simple JSON-Schema document that can be applied with the same validation semantics as an equivalent SHACL validation over the RDF graph encoded in the target JSON-LD document; but with the simplicity and runtime performance of a regular JSON Schema.
 
 ## Usage
 
-JSON-LD Schema is provided as a typescript library exposing a single function `validate` that accepts a parsed JSON-LD document and JSON-LD Schema:
+JSON-LD Schema is implemented as a TypeScript library exposing a single `validate` function that accepts a parsed JSON-LD document and a JSON-LD Schema:
 
 ```typescript
 import * as jsonldSchema from "jsonldSchema";
@@ -47,10 +47,10 @@ if (!res.validates) {
 
 JSON-LD Schema defines a simple ['semantics' JSON-Schema vocabulary](docs/vocabulary.json) (effectively a JSON-Schema meta-schema) that reuses the official [JSON Schema
 for JSON-LD](https://github.com/json-ld/json-ld.org/blob/master/schemas/jsonld-schema.json) to provide definitions for `@context` and `@type` properties. These annotations can be used to provide JSON-LD context for a JSON-Schema document.
-Provided this JSON-LD context, constraints over named 'properties' in a JSON Schema document can be understood as constraints
+Given this JSON-LD context, constraints over named 'properties' in a JSON Schema document can be understood as constraints
 over CURIES of JSON-LD documents following the context rules defined in the JSON-LD specification.
 
-This is an example of a simple JSON-LD Schema document:
+An example of a simple JSON-LD Schema document:
 
 ```json
 {
@@ -72,12 +72,12 @@ This is an example of a simple JSON-LD Schema document:
 }
 ```
 
-This schema could be used directly to validate using a JSON Schema validator JSON-LD documents sharing the same context and expected
-document structure, but this is not a valid general assumption.
+This JSON-LD Schema could be used by a JSON Schema validator to validate JSON-LD documents *if they share the same context and expected
+document structure*, but that is not a valid general assumption.
 To validate any JSON-LD document, a JSON-LD Schema validator must first transform this JSON-LD Schema, according to a well-defined set of rules, into a matching
 [JSON-LD frame](https://www.w3.org/TR/json-ld11-framing/) that can be used to select nodes from the target JSON-LD document.
 
-In the case of the previously shown JSON-LD Schema, the equivalent JSON-LD frame for that schema would be:
+The equivalent JSON-LD frame for the previously shown JSON-LD Schema is:
 
 ```json
 {
@@ -88,12 +88,12 @@ In the case of the previously shown JSON-LD Schema, the equivalent JSON-LD frame
 }
 ```
 
-The JSON-LD Schema validator must apply the derived JSON-LD frame to any input JSON-LD document to process and validate
-each of them framed JSON-LD documents against the original JSON-LD Schema using a regular JSON Schema validator.
+The JSON-LD Schema validator must apply the derived JSON-LD frame to any input JSON-LD document in order to process and validate
+each so-framed JSON-LD document against the original JSON-LD Schema using a regular JSON Schema validator.
 
-Applying the JSON Schema validation to the framed JSON-LD is equivalent to apply a SHACL validation for a 
+Applying the JSON Schema validation to the framed JSON-LD is equivalent to applying a SHACL validation for a 
 SHACL shape that was mapped from the JSON-LD Schema according to a fixed set of mapping rules.
-In this example the matching SHACL shape would be:
+According to the mapping rules, the corresponding SHACL shape for the given example is:
 
 ```json
 {
@@ -135,11 +135,11 @@ In this example the matching SHACL shape would be:
 ```
 ## Limitations
 
-JSON-LD schema is just a way of  using pragamatically two complementary solutiosn built by different communities. 
+JSON-LD Schema is just a way of pragamatically using two complementary solutions built by different communities. 
 
-We are not trying to provide a different way of providing semantics for a JSON document through the JSON-LD Schema `@context`, or lift JSON documents into JSON-LD documents applying some kind of schema as a style-sheet mechanism. The JSON-LD Schema is geared towards validating already existing JSON-LD documents and not every arbitrary JSON-Schema could be transformed into a useful (although maybe syntactically valid) JSON-LD Schema. Specific rules about dealing with arrays and collections might be added.
+We are not trying to provide a different way of providing semantics for a JSON document through the JSON-LD Schema `@context` or lift JSON documents into JSON-LD documents by applying some kind of schema as a style-sheet mechanism. JSON-LD Schema is geared towards validating already-existing JSON-LD documents; every arbitrary JSON-Schema cannot be transformed into a useful (though maybe syntactically valid) JSON-LD Schema. Specific rules for dealing with arrays and collections might be added.
 
-In the same way, JSON-LD Schema is not meant to be a replacement for SHACL. Only a subset of the expressivity of SHACL will be supported in JSON-LD Schema although some specific validation rules in JSON-Schema, when applied to the framed JSON-LD documents, might not find a translation to standard SHACL constraints, requiring custom SHACL constraints to provide a 1 to 1 translation.
+In the same way, JSON-LD Schema is not meant to be a replacement for SHACL. Only a subset of the expressivity of SHACL will be supported in JSON-LD Schema. When applied to framed JSON-LD documents, some JSON-Schema validation rules may not be translatable to standard SHACL constraints, so custom SHACL constraints would be necessary to produce a 1-to-1 translation.
 
 ## Status
 
@@ -147,6 +147,6 @@ The current project is in its initial stage and can be considered pre-alpha.
 
 The current code can apply basic JSON-LD Schema validations and generate the equivalent SHACL validations for the JSON-LD Schema.
 
-An initial test suite is also supported that checks the translation of JSON-LD Schemas into JSON-LD frames and SHACL constraints and checks that the validation of a particular JSON-LD Schema over a JSON-LD document matches the validation result of applying the SHACL shape.
+The initial test suite checks the translation of JSON-LD Schemas into JSON-LD frames and SHACL constraints and checks that the validation of a particular JSON-LD Schema over a JSON-LD document matches the validation result of applying the SHACL shape.
 
 Rules for mapping from JSON-LD Schema to JSON-LD frames and SHACL haven't been extracted from the code yet.
