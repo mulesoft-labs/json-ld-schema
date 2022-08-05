@@ -135,7 +135,7 @@ In this example the matching SHACL shape would be:
 ```
 ## Limitations
 
-JSON-LD schema is just a way of  using pragamatically two complementary solutiosn built by different communities. 
+JSON-LD schema is just a way of  using pragamatically two complementary solutions built by different communities. 
 
 We are not trying to provide a different way of providing semantics for a JSON document through the JSON-LD Schema `@context`, or lift JSON documents into JSON-LD documents applying some kind of schema as a style-sheet mechanism. The JSON-LD Schema is geared towards validating already existing JSON-LD documents and not every arbitrary JSON-Schema could be transformed into a useful (although maybe syntactically valid) JSON-LD Schema. Specific rules about dealing with arrays and collections might be added.
 
