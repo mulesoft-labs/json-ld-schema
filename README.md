@@ -68,7 +68,7 @@ This is an example of a simple JSON-LD Schema document:
       "pattern": "male|female"
     }
   },
-  "required": [ "sorg:name", "sorg:gender"]
+  "required": [ "sorg:givenName", "sorg:gender"]
 }
 ```
 
