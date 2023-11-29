@@ -21,6 +21,6 @@
     "@types/node": "^12.7.1",
     "ajv": "^6.10.2",
     "json-schema-ref-parser": "^7.1.0",
-    "jsonld": "^1.6.2"
+    "jsonld": "^5.0.0"
   }
 }
